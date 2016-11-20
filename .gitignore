@@ -1,0 +1,9 @@
+.pydevproject
+.project
+.settings
+dist
+build
+*.pyc
+*.egg-info
+MANIFEST
+VERSION.txt
