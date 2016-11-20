@@ -94,3 +94,6 @@ VERSION.txt
 sic.egg-info
 .idea/
 venv
+.project
+.pydevproject
+.settings

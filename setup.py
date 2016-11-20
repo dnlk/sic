@@ -23,10 +23,10 @@ def packages():
 setup(
     name="sic",
     packages=packages(),
-    entry_points=dict(console_scripts=['sndtoimg = sic.sound_to_image:main']),
+    entry_points=dict(console_scripts=['imgtosnd = sic.image_to_sound:main']),
     version=file(version).read().strip(),
     url="https://github.com/christianblume-serato/sic",
-    author="Christian Blume",
+    author="Bach-2-0",
     author_email="christian.blume@serato.com",
     description="Image-sound conversions",
     long_description=file('README.md').read(),
