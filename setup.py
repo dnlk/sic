@@ -30,5 +30,9 @@ setup(
     author_email="christian.blume@serato.com",
     description="Image-sound conversions",
     long_description=file('README.md').read(),
-    install_requires=[],
+    install_requires=[
+        "SoundFile",
+        "Pillow",
+        "numpy",
+    ],
 )
