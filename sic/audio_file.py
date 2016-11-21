@@ -13,7 +13,7 @@ try:
 except AttributeError:
     OUT_PATH = NotImplemented
 
-SAMPLE_RATE = 44100
+SAMPLE_RATE = 4100
 
 
 def play_audio_block(data, sample_rate=SAMPLE_RATE):
