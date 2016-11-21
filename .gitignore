@@ -97,3 +97,5 @@ venv
 .project
 .pydevproject
 .settings
+tmp/*
+.DS_Store
