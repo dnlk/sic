@@ -2,12 +2,13 @@ from sic import argparsing, imageprocessing
 from sic.transformation import InverseFFT, Normalizer
 from sklearn.pipeline import Pipeline
 from sic.audio_file import play_audio_block
+from sic.imageprocessing import SamplingOptions
 
 
 def main():
     args = argparsing.parse_args()
     width, height, image_data = imageprocessing.load_image(args.image)
-    X = imageprocessing.pixel_sampler(width, height, image_data)
+    X = imageprocessing.pixel_sampler(width, height, image_data, SamplingOptions.REDGREEN)
     pipeline = Pipeline(
         [("inverse_fft", InverseFFT()),
          ("normalizer", Normalizer())],
