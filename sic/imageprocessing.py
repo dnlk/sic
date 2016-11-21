@@ -21,7 +21,6 @@ class SamplingOptions:
 
 
 def pixel_sampler( width, height, data, sample_option ):
-	print "lala"
 	result = []
 
 	for x in data:
@@ -48,8 +47,4 @@ def pixel_sampler( width, height, data, sample_option ):
 
 		result.append( pixel )
 
-	print( "finished sampling \n")
-	for x in result:
-		print( x )
-
-	return 
+	return result
