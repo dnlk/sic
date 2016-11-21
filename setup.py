@@ -34,5 +34,6 @@ setup(
         "SoundFile",
         "Pillow",
         "numpy",
+        "scikit-learn",
     ],
 )
