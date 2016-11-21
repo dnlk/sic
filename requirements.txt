@@ -1,0 +1,6 @@
+sounddevice
+SoundFile
+Pillow
+numpy
+scikit-learn
+scipy
