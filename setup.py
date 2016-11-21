@@ -31,7 +31,7 @@ setup(
     description="Image-sound conversions",
     long_description=file('README.md').read(),
     install_requires=[
-        "sounddevice"
+        "sounddevice",
         "SoundFile",
         "Pillow",
         "numpy",
