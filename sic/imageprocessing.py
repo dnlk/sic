@@ -11,20 +11,16 @@ def load_image(filename):
 #This file include methods that prepares the RGB image pixels arrays to be 
 #fed into the inverse FFT processor
 
-class SamplingOptions:
 
+class SamplingOptions:
 	RED = 		'red'
 	GREEN = 	'green'
 	BLUE = 		'blue'
 	GREYSCALE = 'greyscale'
 
 
-
-def pixel_sampler( width, height, data, sample_option ):
+def pixel_sampler(width, height, data, sample_option=SamplingOptions.GREYSCALE):
 	result = []
-
-	for x in data:
-		print x
 
 	for x in data:
 		pixel = ( 0, 0 )
