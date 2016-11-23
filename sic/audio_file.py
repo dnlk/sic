@@ -10,7 +10,7 @@ TMP_DIR = NotImplemented
 OUT_FILE = NotImplemented
 try:
     OUT_PATH = os.path.join(TMP_DIR, OUT_FILE)
-except AttributeError:
+except (AttributeError, TypeError):
     OUT_PATH = NotImplemented
 
 SAMPLE_RATE = 44100
@@ -20,11 +20,11 @@ def play_audio_block(data, sample_rate=SAMPLE_RATE):
     time_to_sleep = len(data) * 1.0 / SAMPLE_RATE
     sd.play(data, sample_rate)
     time.sleep(time_to_sleep)
+    sd.stop()
 
 
 def write_wave_file(data, out_file=OUT_FILE, sample_rate=SAMPLE_RATE):
     sf.write(out_file, data, sample_rate)
-
 
 
 if __name__ == '__main__':
