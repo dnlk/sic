@@ -1,5 +1,5 @@
 import itertools
-import queue
+import Queue
 import threading
 import time
 
@@ -10,9 +10,24 @@ from sic import image
 
 SAMPLE_RATE = 44100
 BUFFER_SIZE = 4410
-DT = 1 / SAMPLE_RATE
+DT = 1.0 / SAMPLE_RATE
+SLEEPY_TIME = DT * BUFFER_SIZE
 
-Q = queue.deque(maxlen=10)
+Q = Queue.deque(maxlen=10)
+
+
+class RotatingList(object):
+
+    def __init__(self, iterable):
+        self.list = [i for i in iterable]
+        self.len = len(self.list)
+        self.current_idx = 0
+
+
+    def next(self):
+        return_item = self.list[self.current_idx]
+        self.current_idx = (self.current_idx + 1) % self.len
+        return return_item
 
 
 def callback(indata, outdata, frames, t, status):
@@ -27,19 +42,22 @@ def callback(indata, outdata, frames, t, status):
         pass
 
 
-def write_to_buffer(motion_detector, oscillator):
+def write_to_buffer(motion_detector, oscillators):
+
+    np_arrays = RotatingList([np.zeros((BUFFER_SIZE, 1)) for _ in range(10)])
+
+
     Q.clear()
     t0 = time.time()
     x0 = motion_detector.x
     y0 = motion_detector.y
 
-    sleepy_time = BUFFER_SIZE / SAMPLE_RATE
-
     for i in itertools.count():
         t = time.time()
-        dt = t0 + i * sleepy_time - t  # 1 second
+        dt = t0 + i * SLEEPY_TIME - t  # 1 second
+        # print('dt: {}, SLEEPY_TIME: {}, t0: {}, t: {}'.format(dt, sleepy_time, t0, t))
         if dt > 0:
-            print('Sleeping for {} seconds. CPU consumption: {}'.format(dt, (sleepy_time - dt) / sleepy_time * 100))
+            print('Sleeping for {} seconds. CPU consumption: {}'.format(dt, (SLEEPY_TIME - dt) / SLEEPY_TIME * 100))
             time.sleep(dt)
 
         x1 = motion_detector.x
@@ -51,13 +69,19 @@ def write_to_buffer(motion_detector, oscillator):
         delta_intensities = image.delta_intensities(intensities)
 
         array = np.zeros((BUFFER_SIZE, 1))
+        # array = np_arrays.next()
+
         for i, di in enumerate(delta_intensities):
-            oscillator.update(di * 5000, DT)
-            array[i] = oscillator.position
+            sum_oscillators = 0
+            for osc in oscillators:
+                osc.update(di * 5000, DT)
+                sum_oscillators += osc.position
+            array[i] = sum_oscillators
 
-        print(array)
+        print(array.transpose())
 
-        Q.appendleft(array)
+        if len(Q) <= 1:
+            Q.appendleft(array)
 
         x0 = x1
         y0 = y1
@@ -65,8 +89,8 @@ def write_to_buffer(motion_detector, oscillator):
         print('q size: {}'.format(len(Q)))
 
 
-def start_write_to_buffer_thread(motion_detector, oscillator):
-    write_to_buffer_thread = threading.Thread(target=lambda: write_to_buffer(motion_detector, oscillator))
+def start_write_to_buffer_thread(motion_detector, oscillators):
+    write_to_buffer_thread = threading.Thread(target=lambda: write_to_buffer(motion_detector, oscillators))
     write_to_buffer_thread.name = 'write to buffer thread'
     return write_to_buffer_thread.start()
 
@@ -81,3 +105,23 @@ def start_audio_stream_thread():
     audio_stream_thread = threading.Thread(target=audio_stream)
     audio_stream_thread.name = 'audio_stream_thread'
     return audio_stream_thread.start()
+
+
+if __name__ == '__main__':
+    import gui
+    import harmonic_oscillator
+    md = gui.MotionDetector()
+    ho = harmonic_oscillator.Oscillator(
+        mass=.001,
+        position=0,
+        velocity=0,
+        acceleration=0,
+        friction_coef=10,
+        spring_coef=10000,
+    )
+
+    start_write_to_buffer_thread(md, ho)
+    start_audio_stream_thread()
+
+    while True:
+        time.sleep(1)

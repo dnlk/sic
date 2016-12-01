@@ -1,8 +1,8 @@
 from sic import imageprocessing as impr
 
-IMAGE_PATH = 'C:/Users/Dan/Desktop/Projects/hackathon/sic/sic/mandelbrot.jpg'
+
+IMAGE_PATH = '/Users/daniel.kinney/hackathon/sic/sic/mandelbrot.jpg'
 WIDTH, HEIGHT, IMG_DATA = impr.load_image(IMAGE_PATH)
-x = 0
 
 
 def rgb_intensity(r, g, b):

@@ -1,5 +1,5 @@
 import threading
-import tkinter as tk
+import Tkinter as tk
 
 from PIL import Image, ImageTk
 
@@ -11,7 +11,8 @@ GUI_HEIGHT = 600
 
 class Application(tk.Frame):
     def __init__(self, master=None):
-        super().__init__(master)
+        tk.Frame.__init__(self, master=master)
+        # super(Application, self).__init__(master)
         self.pack()
         self.create_widgets()
 
@@ -19,11 +20,12 @@ class Application(tk.Frame):
 
         img = Image.open(image.IMAGE_PATH)
         img = img.resize((GUI_WIDTH, GUI_HEIGHT), Image.ANTIALIAS)
-        img_tk = ImageTk.PhotoImage(img)
 
-        self.label = tk.Label(self, image=img_tk, width=GUI_WIDTH, height=GUI_HEIGHT)
-        self.label.image = img_tk
-        self.label.pack(side="top")
+        self.img_tk = ImageTk.PhotoImage(img)
+
+        self.label = tk.Label(self, image=self.img_tk, width=GUI_WIDTH, height=GUI_HEIGHT)
+        self.label.img_tk = self.img_tk
+        self.label.pack()
 
 
 class MotionDetector(object):
@@ -34,8 +36,8 @@ class MotionDetector(object):
 
     def motion(self, event):
         x, y = event.x, event.y
-        adjusted_x = int(x / GUI_WIDTH * image.WIDTH)
-        adjusted_y = int(y / GUI_HEIGHT * image.HEIGHT)
+        adjusted_x = int(1.0 * x / GUI_WIDTH * image.WIDTH)
+        adjusted_y = int(1.0 * y / GUI_HEIGHT * image.HEIGHT)
 
         self.x = adjusted_x
         self.y = adjusted_y
@@ -54,8 +56,18 @@ class GuiThread(threading.Thread):
         self.start()
 
     def run(self):
-        root = tk.Tk()
-        root.geometry("{width}x{height}".format(width=GUI_WIDTH, height=GUI_HEIGHT))
-        root.bind('<Motion>', self.motion_detector.motion)
-        self.app = Application(master=root)
+        self.root = tk.Tk()
+        self.root.geometry("{width}x{height}".format(width=GUI_WIDTH, height=GUI_HEIGHT))
+        self.root.bind('<Motion>', self.motion_detector.motion)
+        self.app = Application(master=self.root)
         self.app.mainloop()
+
+
+if __name__ == '__main__':
+
+    root = tk.Tk()
+    root.geometry("{width}x{height}".format(width=GUI_WIDTH, height=GUI_HEIGHT))
+    motion_detector = MotionDetector()
+    root.bind('<Motion>', motion_detector.motion)
+    app = Application(master=root)
+    app.mainloop()
