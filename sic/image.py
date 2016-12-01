@@ -1,7 +1,11 @@
+import os
+
 from sic import imageprocessing as impr
 
 
-IMAGE_PATH = '/Users/daniel.kinney/hackathon/sic/sic/mandelbrot.jpg'
+IMAGE_FILE = 'mandelbrot.jpg'
+IMAGE_PATH = os.path.join(os.path.dirname(__file__), IMAGE_FILE)
+
 WIDTH, HEIGHT, IMG_DATA = impr.load_image(IMAGE_PATH)
 
 
