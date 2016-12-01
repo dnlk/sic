@@ -1,9 +1,8 @@
 
 import math
 
-import audio_file
-
-import numpy as np
+# import audio_file
+# import numpy as np
 
 
 def max_position(k, max_e):
@@ -68,40 +67,40 @@ class Oscillator(object):
         self.velocity = final_v
 
 
-if __name__ == '__main__':
-
-    osc = Oscillator(
-        mass=.001,
-        position=0,
-        velocity=0,
-        acceleration=0,
-        friction_coef=10,
-        spring_coef=10000,
-    )
-
-    DT = 1.0 / 44100
-    SECONDS_AUDIO = 2
-    SAMPLE_RATE = 44100
-    NUM_SAMPLES = SAMPLE_RATE * SECONDS_AUDIO
-
-    t = np.linspace(0, SECONDS_AUDIO, NUM_SAMPLES, False)
-    A_freq = 500
-    A_note = np.sin(A_freq * t * 2 * np.pi)
-    other_note = np.sin(700 * t * 2 * np.pi)
-
-    EXT_F = (A_note + other_note) * 10000
-
-    time_since_last_peak = 0
-    total_time = 0
-
-    array = np.zeros((NUM_SAMPLES, 1))
-
-    for i in range(NUM_SAMPLES):
-
-        osc.update(EXT_F[i], DT)
-        # osc.update(0, DT)
-
-        array[i] = osc.position
-
-    print(array)
-    audio_file.play_audio_block(array)
+# if __name__ == '__main__':
+#
+#     osc = Oscillator(
+#         mass=.001,
+#         position=0,
+#         velocity=0,
+#         acceleration=0,
+#         friction_coef=10,
+#         spring_coef=10000,
+#     )
+#
+#     DT = 1.0 / 44100
+#     SECONDS_AUDIO = 2
+#     SAMPLE_RATE = 44100
+#     NUM_SAMPLES = SAMPLE_RATE * SECONDS_AUDIO
+#
+#     t = np.linspace(0, SECONDS_AUDIO, NUM_SAMPLES, False)
+#     A_freq = 500
+#     A_note = np.sin(A_freq * t * 2 * np.pi)
+#     other_note = np.sin(700 * t * 2 * np.pi)
+#
+#     EXT_F = (A_note + other_note) * 10000
+#
+#     time_since_last_peak = 0
+#     total_time = 0
+#
+#     array = np.zeros((NUM_SAMPLES, 1))
+#
+#     for i in range(NUM_SAMPLES):
+#
+#         osc.update(EXT_F[i], DT)
+#         # osc.update(0, DT)
+#
+#         array[i] = osc.position
+#
+#     print(array)
+#     audio_file.play_audio_block(array)
